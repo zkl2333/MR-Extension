@@ -1,21 +1,15 @@
-// 用于获取站点的cookie
-const getCookiePromise = (url) => {
-    return new Promise((resolve, reject) => {
-        chrome.cookies.getAll({ url: url, }, (cks) => {
-            if (cks.length == 0) {
-                resolve("");
-                return;
-            }
-            let cookie = cks.map((item) => {
-                return item.name + "=" + item.value;
-            }).join(";") + ";";
-            resolve(cookie);
-        });
-    });
-}
+import { getSitesConfig, saveSite, getSitesSetting } from "../api/index.js";
 
-let baseUrl = "";
-let Authorization = ""
+// 用于获取站点的cookie
+const getCookies = async (url) => {
+    const cookie = await chrome.cookies.getAll({ url: url, });
+    if (cookie.length == 0) {
+        return "";
+    }
+    return cookie.map((item) => {
+        return item.name + "=" + item.value;
+    }).join(";") + ";";
+}
 
 const defaultSiteSetting = {
     "site_name": "",
@@ -28,66 +22,13 @@ const defaultSiteSetting = {
     "user_agent": ""
 }
 
-const apis = {
-    sites: "/api/common/sites",
-    saveSite: "/api/site/save_site",
-    getSites: "/api/site/get_sites",
-}
-
-const getSitesSetting = async () => {
-    const res = await fetch(baseUrl + apis.getSites + '?access_key=' + Authorization, {
-        method: "GET",
-        headers: {
-            // Authorization: 'Bearer ' + Authorization,
-        },
-    });
-    const data = await res.json();
-    if (data.code == 0) {
-        return data.data;
-    }
-    alert(data.msg || data.message);
-    return [];
-}
-
-const saveSite = async (siteConfig) => {
-    const res = await fetch(baseUrl + apis.saveSite + '?access_key=' + Authorization, {
-        method: "POST",
-        headers: {
-            // Authorization: 'Bearer ' + Authorization,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(siteConfig),
-    });
-    const data = await res.json();
-    if (data.code == 0) {
-        return data.data;
-    }
-    throw new Error(data.msg || data.message);
-}
-
-const getSitesConfig = async () => {
-    const res = await fetch(baseUrl + apis.sites + '?access_key=' + Authorization, {
-        method: "GET",
-        headers: {
-            // Authorization: 'Bearer ' + Authorization,
-        },
-    });
-    const data = await res.json();
-    if (data.code == 0) {
-        return data.data;
-    }
-    return [];
-}
-
 // 初始化
-chrome.storage.sync.get(["baseUrl", "Authorization"], (result) => {
+chrome.storage.sync.get(["baseUrl", "accessKey"], (result) => {
     if (result.baseUrl) {
         document.querySelector("#baseUrl").value = result.baseUrl;
-        baseUrl = result.baseUrl;
     }
-    if (result.Authorization) {
-        document.querySelector("#Authorization").value = result.Authorization;
-        Authorization = result.Authorization;
+    if (result.accessKey) {
+        document.querySelector("#accessKey").value = result.accessKey;
     }
 });
 
@@ -103,20 +44,36 @@ const setLoading = (loading) => {
 
 document.querySelector("#start").addEventListener("click", async () => {
     setLoading(true);
-    baseUrl = document.querySelector("#baseUrl").value;
-    Authorization = document.querySelector("#Authorization").value;
+    const baseUrl = document.querySelector("#baseUrl").value;
+    const accessKey = document.querySelector("#accessKey").value;
     // 持久化
     chrome.storage.sync.set({
         baseUrl: baseUrl,
-        Authorization: Authorization,
+        accessKey: accessKey,
     });
     const sitesSettingMap = {}
-    const sitesConfig = await getSitesConfig();
-    const sitesSetting = await getSitesSetting();
+    const [sitesConfig, getSitesConfigError] = await getSitesConfig({
+        baseUrl: baseUrl,
+        accessKey: accessKey,
+    });
+    if (getSitesConfigError) {
+        alert(getSitesConfigError);
+        setLoading(false);
+        return;
+    }
+    const [sitesSetting, getSitesSettingError] = await getSitesSetting({
+        baseUrl: baseUrl,
+        accessKey: accessKey,
+    });
+    if (getSitesSettingError) {
+        alert(getSitesSettingError);
+        setLoading(false);
+        return;
+    }
     for (let i = 0; i < sitesConfig.length; i++) {
         const siteConfig = sitesConfig[i];
         if (siteConfig.login && siteConfig.login.required !== false) {
-            const cookie = await getCookiePromise(siteConfig.domain);
+            const cookie = await getCookies(siteConfig.domain);
             const siteSetting = sitesSetting.find((setting) => {
                 return setting.site_name == siteConfig.id;
             });
@@ -145,7 +102,10 @@ document.querySelector("#start").addEventListener("click", async () => {
     }
     const saveSitePromises = [];
     for (let key in sitesSettingMap) {
-        saveSitePromises.push(saveSite(sitesSettingMap[key]));
+        saveSitePromises.push(saveSite({
+            baseUrl: baseUrl,
+            accessKey: accessKey,
+        }, sitesSettingMap[key]));
     }
     Promise.allSettled(saveSitePromises).then((results) => {
         let success = 0;
@@ -153,7 +113,14 @@ document.querySelector("#start").addEventListener("click", async () => {
         let errorMsg = "";
         for (let i = 0; i < results.length; i++) {
             if (results[i].status == "fulfilled") {
-                success++;
+                const [res, err] = results[i].value;
+                if (res) {
+                    success++;
+                }
+                if (err) {
+                    fail++;
+                    errorMsg += err.message + "\n";
+                }
             } else {
                 fail++;
                 errorMsg += results[i].reason.message + "\n";

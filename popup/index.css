@@ -1,0 +1,19 @@
+body {
+  color: #333;
+  text-align: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.setting-panel {
+  text-align: left;
+  min-width: 200px;
+}
+.setting-panel label {
+  display: inline-block;
+  width: 50px;
+}
+#start {
+  margin-top: 10px;
+}
