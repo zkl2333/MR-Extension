@@ -10,7 +10,8 @@
   // 新增popup弹框
   "action": {
     // "default_title": "点击打开弹框",
-    "default_popup": "/popup/index.html"
+    // "default_popup": "/popup/index.html"
+    "default_popup": "/dist/index.html"
   },
   "host_permissions": ["*://*/*"],
   // chrome.cookies
