@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.9",
+    "@types/chrome": "0.0.208",
     "@types/node": "^18.11.18",
     "@vitejs/plugin-vue": "^4.0.0",
     "sass": "^1.57.1",
