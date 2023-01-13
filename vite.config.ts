@@ -1,17 +1,23 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
+import AutoImport from "unplugin-auto-import/vite";
+import Components from "unplugin-vue-components/vite";
+import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
+import { crx } from "@crxjs/vite-plugin";
+import manifest from "./manifest.config";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/dist/",
-  build: {
-    rollupOptions: {
-      input: {
-        main: resolve(__dirname, "index.html"),
-        nested: resolve(__dirname, "popup.html"),
-      },
-    },
-  },
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    crx({ manifest }),
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      dts: true,
+      resolvers: [ElementPlusResolver()],
+    }),
+  ],
 });
