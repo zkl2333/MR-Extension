@@ -43,9 +43,21 @@ const setLoading = (loading) => {
 }
 
 document.querySelector("#start").addEventListener("click", async () => {
-    setLoading(true);
     const baseUrl = document.querySelector("#baseUrl").value;
     const accessKey = document.querySelector("#accessKey").value;
+    document.querySelector("#baseUrl-error").innerText = "";
+    document.querySelector("#accessKey-error").innerText = "" ;
+    // 数值验证
+    if (!baseUrl) {
+        document.querySelector("#baseUrl-error").innerText = "请输入正确的网址";
+        return
+    }
+    if (!accessKey) {
+        document.querySelector("#accessKey-error").innerText = "请输入正确的秘钥";
+        return;
+    }
+    setLoading(true);
+  
     // 持久化
     chrome.storage.sync.set({
         baseUrl: baseUrl,

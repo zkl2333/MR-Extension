@@ -1,19 +1,74 @@
 body {
-  color: #333;
-  text-align: center;
-  padding: 20px;
+  font-family: 'Courier New', Courier, monospace;
+}
+:root {
+  --input-width: 300px;
+  --input-height: 39px;
+  --label-width: 100px;
+
+  /* 160 + 4 */
+  --left-width: 104px; 
+}
+.wrap {
+  display: inline-block;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* padding: 20px 20px 20px 40px; */
+  min-width: 480px;
 }
-.setting-panel {
-  text-align: left;
-  min-width: 200px;
+.title {
+  padding-left: 30px;
+  text-align: center;
 }
-.setting-panel label {
+.item {
+  position: relative;
+  margin-bottom: 30px;
+}
+.item label {
   display: inline-block;
-  width: 50px;
+  width: var(--label-width);
+  text-align: right;
 }
-#start {
+.item.must label::before{
+  content: '*';
+  display: inline-block;
+  color: red;
+  margin-right: 3px;
+}
+.item input {
+  box-sizing: border-box;
+  height: var(--input-height);
+  width: var(--input-width);
+  padding-left: 10px;
+  outline: none;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+}
+.item input::-webkit-outer-spin-button,
+.item input::-webkit-inner-spin-button {
+      -webkit-appearance: none !important;
+}
+.item .error {
+  position: absolute;
+  left: var(--left-width);
+  bottom: -24px;
+  color: red;
+  font-size: 12px;
+}
+.item.submit {
+  padding-left: var(--left-width);
+}
+.submit .btn {
+  background-color: #1891ff;
+  border: 1px solid #1891ff;
+  color: #fff;
+  cursor: pointer;
+}
+.submit .info {
   margin-top: 10px;
+  color: #6cc35b;
+  font-size: 14px;
+}
+.help{
+  text-align: right;
 }
