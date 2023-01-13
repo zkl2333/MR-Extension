@@ -9,9 +9,9 @@
   "manifest_version": 3,
   // 新增popup弹框
   "action": {
-    // "default_title": "点击打开弹框",
+    "default_title": "点击打开弹框",
     // "default_popup": "/popup/index.html"
-    "default_popup": "/dist/index.html"
+    "default_popup": "/dist/popup.html"
   },
   "host_permissions": ["*://*/*"],
   // chrome.cookies

@@ -1,4 +1,4 @@
-import { getSitesConfig, saveSite, getSitesSetting } from "../src/api/index";
+import { getSitesConfig, saveSite, getSitesSetting } from "../../api/index";
 
 // 用于获取站点的cookie
 const getCookies = async (url) => {
