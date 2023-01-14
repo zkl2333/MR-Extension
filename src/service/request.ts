@@ -8,7 +8,10 @@ export const request = async (url: string, options: RequestInit) => {
 };
 
 // 将上面的代码封装成返回[data,error]的函数
-export const useRequest = async (url: string, options: RequestInit): Promise<[any, any]> => {
+export const useRequest = async <T>(
+  url: string,
+  options: RequestInit
+): Promise<[T | null, any]> => {
   try {
     const data = await request(url, options);
     return [data, null];

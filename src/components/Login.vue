@@ -1,6 +1,6 @@
 <template>
   <div class="wrap">
-    <h2 class="title"><img src="@/assets/logo.svg" alt="logo" width="50" /> 自动更新站点 Cookie</h2>
+    <h2 class="title">配置您的 Movie Bot</h2>
     <el-form :model="form">
       <el-form-item prop="baseUrl">
         <el-input v-model="form.baseUrl" placeholder="请输入网址 eg:http://localhost:3000" />
@@ -21,15 +21,16 @@
       </el-form-item>
     </el-form>
     <div class="help">
-      <el-button type="text" @click="openUrl('https://github.com/zkl2333/MR-Extension')">
+      <el-link type="primary" @click="openUrl('https://github.com/zkl2333/MR-Extension')">
         使用文档
-      </el-button>
+      </el-link>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
   .wrap {
+    flex: 1;
     .title {
       img {
         margin-right: 10px;
@@ -47,32 +48,25 @@
 
 <script lang="ts" setup>
   import { ref, reactive } from "vue";
-  import { getCookiesAndSaveSite } from "../../../utils/utils";
+  import { openUrl } from "../utils/utils";
+
   const loading = ref(false);
   const form = reactive({
     baseUrl: "",
     accessKey: "",
   });
-  // 初始化
+
   chrome.storage.sync.get(["baseUrl", "accessKey"], (result) => {
-    if (result.baseUrl) {
-      form.baseUrl = result.baseUrl;
-    }
-    if (result.accessKey) {
-      form.accessKey = result.accessKey;
-    }
+    form.baseUrl = result.baseUrl;
+    form.accessKey = result.accessKey;
   });
-  const openUrl = (url: string) => {
-    chrome.tabs.create({ url });
-  };
+
   const submit = async () => {
     loading.value = true;
-    // 持久化
     chrome.storage.sync.set({
       baseUrl: form.baseUrl,
       accessKey: form.accessKey,
     });
-    await getCookiesAndSaveSite(form, loading);
     loading.value = false;
   };
 </script>

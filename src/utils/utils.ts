@@ -132,3 +132,7 @@ export const getCookiesAndSaveSite = async (
     alert(`成功保存${success}个站点配置，失败${fail}个，失败原因：\n${errorMsg}`);
   });
 };
+
+export const openUrl = (url: string) => {
+  chrome.tabs.create({ url });
+};
