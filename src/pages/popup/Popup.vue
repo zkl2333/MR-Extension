@@ -60,7 +60,7 @@
 
   const store = useStore();
   const isCollapse = ref(true);
-  const activeKey = ref("user");
+  const activeKey = ref("site");
 
   const handleSelect = (key: string) => {
     activeKey.value = key;
@@ -68,16 +68,16 @@
 
   const viewList = [
     {
+      title: "站点信息",
+      icon: Postcard,
+      key: "site",
+      component: Sites,
+    },
+    {
       title: "用户信息",
       icon: User,
       key: "user",
       component: UserView,
-    },
-    {
-      title: "站点信息",
-      icon: Postcard,
-      key: "Site",
-      component: Sites,
     },
     {
       title: "关于",
