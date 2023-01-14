@@ -16,14 +16,14 @@ const apis = {
 
 export const getSitesConfig = async () => {
   const { baseUrl, accessKey } = getAuthData();
-  return await useRequest(baseUrl + apis.sites + "?access_key=" + accessKey, {
+  return await useRequest<any>(baseUrl + apis.sites + "?access_key=" + accessKey, {
     method: "GET",
   });
 };
 
 export const saveSite = async (siteConfig: any) => {
   const { baseUrl, accessKey } = getAuthData();
-  return await useRequest(baseUrl + apis.saveSite + "?access_key=" + accessKey, {
+  return await useRequest<any>(baseUrl + apis.saveSite + "?access_key=" + accessKey, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -34,7 +34,7 @@ export const saveSite = async (siteConfig: any) => {
 
 export const getSitesSetting = async () => {
   const { baseUrl, accessKey } = getAuthData();
-  return await useRequest(baseUrl + apis.getSites + "?access_key=" + accessKey, {
+  return await useRequest<any>(baseUrl + apis.getSites + "?access_key=" + accessKey, {
     method: "GET",
   });
 };

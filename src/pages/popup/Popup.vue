@@ -37,7 +37,7 @@
           </el-header>
           <el-main>
             <div class="main">
-              <component :is="activeView?.comment" />
+              <component :is="activeView?.component" />
             </div>
           </el-main>
         </el-container>
@@ -71,13 +71,13 @@
       title: "用户信息",
       icon: User,
       key: "user",
-      comment: UserView,
+      component: UserView,
     },
     {
       title: "站点信息",
       icon: Postcard,
       key: "Site",
-      comment: Sites,
+      component: Sites,
     },
     {
       title: "关于",

@@ -48,19 +48,13 @@ export const getCookiesAndSaveSite = async (
   //   setLoading(true);
   loading.value = true;
   const sitesSettingMap: { [key: string]: typeof defaultSiteSetting } = {};
-  const [sitesConfig, getSitesConfigError] = await getSitesConfig({
-    baseUrl: baseUrl,
-    accessKey: accessKey,
-  });
+  const [sitesConfig, getSitesConfigError] = await getSitesConfig();
   if (getSitesConfigError) {
     alert(getSitesConfigError);
     loading.value = false;
     return;
   }
-  const [sitesSetting, getSitesSettingError] = await getSitesSetting({
-    baseUrl: baseUrl,
-    accessKey: accessKey,
-  });
+  const [sitesSetting, getSitesSettingError] = await getSitesSetting();
   if (getSitesSettingError) {
     alert(getSitesSettingError);
     loading.value = false;
@@ -98,15 +92,7 @@ export const getCookiesAndSaveSite = async (
   }
   const saveSitePromises = [];
   for (let key in sitesSettingMap) {
-    saveSitePromises.push(
-      saveSite(
-        {
-          baseUrl: baseUrl,
-          accessKey: accessKey,
-        },
-        sitesSettingMap[key]
-      )
-    );
+    saveSitePromises.push(saveSite(sitesSettingMap[key]));
   }
 
   Promise.allSettled(saveSitePromises).then((results) => {
