@@ -32,20 +32,6 @@ export const getCookiesAndSaveSite = async (
   form: { baseUrl: string; accessKey: string },
   loading: Ref<boolean>
 ) => {
-  const baseUrl = form.baseUrl;
-  const accessKey = form.accessKey;
-  //   document.querySelector("#baseUrl-error").innerText = "";
-  //   document.querySelector("#accessKey-error").innerText = "";
-  //   // 数值验证
-  //   if (!baseUrl) {
-  //     document.querySelector("#baseUrl-error").innerText = "请输入正确的网址";
-  //     return;
-  //   }
-  //   if (!accessKey) {
-  //     document.querySelector("#accessKey-error").innerText = "请输入正确的秘钥";
-  //     return;
-  //   }
-  //   setLoading(true);
   loading.value = true;
   const sitesSettingMap: { [key: string]: typeof defaultSiteSetting } = {};
   const [sitesConfig, getSitesConfigError] = await getSitesConfig();
@@ -57,6 +43,11 @@ export const getCookiesAndSaveSite = async (
   const [sitesSetting, getSitesSettingError] = await getSitesSetting();
   if (getSitesSettingError) {
     alert(getSitesSettingError);
+    loading.value = false;
+    return;
+  }
+  if (!sitesConfig) {
+    alert("获取站点配置失败");
     loading.value = false;
     return;
   }

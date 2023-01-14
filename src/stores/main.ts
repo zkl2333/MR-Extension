@@ -10,7 +10,6 @@ export const useStore = defineStore("main", () => {
     accessKey: "",
   });
   const userinfo = ref<Userinfo | null>(null);
-  const siteInfo = ref({});
 
   // 计算属性
   const isLogin = computed(() => {
@@ -54,7 +53,6 @@ export const useStore = defineStore("main", () => {
     init,
     isLogin,
     authData,
-    siteInfo,
     logout,
   };
 });

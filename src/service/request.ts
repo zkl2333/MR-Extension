@@ -11,7 +11,7 @@ export const request = async (url: string, options: RequestInit) => {
 export const useRequest = async <T>(
   url: string,
   options: RequestInit
-): Promise<[T | null, any]> => {
+): Promise<[T, null] | [null, any]> => {
   try {
     const data = await request(url, options);
     return [data, null];

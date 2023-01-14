@@ -1,6 +1,6 @@
 import { useRequest } from "../service/request";
 import { useStore } from "@/stores/main";
-import { Userinfo } from "@/types/types";
+import { Userinfo, SiteConfig } from "@/types/types";
 
 const getAuthData = () => {
   const store = useStore();
@@ -16,7 +16,7 @@ const apis = {
 
 export const getSitesConfig = async () => {
   const { baseUrl, accessKey } = getAuthData();
-  return await useRequest<any>(baseUrl + apis.sites + "?access_key=" + accessKey, {
+  return await useRequest<SiteConfig[]>(baseUrl + apis.sites + "?access_key=" + accessKey, {
     method: "GET",
   });
 };

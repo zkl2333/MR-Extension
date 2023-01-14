@@ -19,3 +19,19 @@ export interface Userinfo {
   avatar: string;
   role_name: string;
 }
+
+export interface SiteConfig {
+  config_filepath: string;
+  id: string;
+  name: string;
+  domain: string;
+  encoding: string;
+  config_url: string;
+  version: number;
+  login?: {
+    required?: boolean;
+    test: {
+      selector: string;
+    };
+  };
+}
