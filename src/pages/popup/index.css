@@ -1,8 +1,0 @@
-body {
-  font-family: "Courier New", Courier, monospace;
-}
-:root {
-  /* 160 + 4 */
-  --left-width: 104px;
-  width: 375px;
-}

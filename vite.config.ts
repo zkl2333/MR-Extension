@@ -6,6 +6,7 @@ import Components from "unplugin-vue-components/vite";
 import { ElementPlusResolver } from "unplugin-vue-components/resolvers";
 import { crx } from "@crxjs/vite-plugin";
 import manifest from "./manifest.config";
+import IconsResolver from "unplugin-icons/resolver";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -18,7 +19,12 @@ export default defineConfig({
     vue(),
     crx({ manifest }),
     AutoImport({
-      resolvers: [ElementPlusResolver()],
+      resolvers: [
+        IconsResolver({
+          enabledCollections: ["ep"],
+        }),
+        ElementPlusResolver(),
+      ],
     }),
     Components({
       dts: true,

@@ -30,7 +30,6 @@
 
 <style lang="scss" scoped>
   .wrap {
-    padding: 20px;
     .title {
       img {
         margin-right: 10px;
@@ -48,7 +47,7 @@
 
 <script lang="ts" setup>
   import { ref, reactive } from "vue";
-  import { getCookiesAndSaveSite } from "./utils";
+  import { getCookiesAndSaveSite } from "../../../utils/utils";
   const loading = ref(false);
   const form = reactive({
     baseUrl: "",
@@ -73,7 +72,6 @@
       baseUrl: form.baseUrl,
       accessKey: form.accessKey,
     });
-    // delay 2s
     await getCookiesAndSaveSite(form, loading);
     loading.value = false;
   };
