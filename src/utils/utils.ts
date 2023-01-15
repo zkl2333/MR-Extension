@@ -1,5 +1,5 @@
 import { Ref } from "vue";
-import { getSitesConfig, saveSite, getSitesSetting } from "../api/index";
+import { getSitesConfig, saveSite, getSitesSetting } from "../service/mbot";
 
 // 用于获取站点的cookie
 const getCookies = async (url: any) => {

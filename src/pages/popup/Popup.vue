@@ -1,52 +1,50 @@
 <template>
-  <div class="container">
-    <template v-if="store.init && store.isLogin">
-      <el-container v-loading="!store.isLogin">
-        <el-aside>
-          <el-menu
-            active-text-color="#f2ae4f"
-            background-color="#545c64"
-            class="el-menu-vertical-demo"
-            text-color="#fff"
-            :default-active="activeKey"
-            :collapse="isCollapse"
-            @select="handleSelect"
-          >
-            <el-menu-item v-for="item in viewList" :key="item.key" :index="item.key">
-              <el-icon>
-                <component :is="item.icon" />
-              </el-icon>
-              <span slot="title">{{ item.title }}</span>
-            </el-menu-item>
-          </el-menu>
-        </el-aside>
-        <el-container>
-          <el-header>
-            <!-- 展开收起侧边栏 -->
-            <div class="collaspse" @click="isCollapse = !isCollapse">
-              <el-icon v-if="isCollapse">
-                <el-icon-Expand />
-              </el-icon>
-              <el-icon v-else>
-                <el-icon-Fold />
-              </el-icon>
-            </div>
-            <div class="view-title">
-              {{ activeView?.title }}
-            </div>
-          </el-header>
+  <el-container v-loading="loading">
+    <template v-if="store.isLogin">
+      <el-aside>
+        <el-menu
+          active-text-color="#f2ae4f"
+          background-color="#545c64"
+          class="el-menu-vertical-demo"
+          text-color="#fff"
+          :default-active="activeKey"
+          :collapse="isCollapse"
+          @select="handleSelect"
+        >
+          <el-menu-item v-for="item in viewList" :key="item.key" :index="item.key">
+            <el-icon>
+              <component :is="item.icon" />
+            </el-icon>
+            <span slot="title">{{ item.title }}</span>
+          </el-menu-item>
+        </el-menu>
+      </el-aside>
+      <el-container>
+        <el-header>
+          <!-- 展开收起侧边栏 -->
+          <div class="collaspse" @click="isCollapse = !isCollapse">
+            <el-icon v-if="isCollapse">
+              <el-icon-Expand />
+            </el-icon>
+            <el-icon v-else>
+              <el-icon-Fold />
+            </el-icon>
+          </div>
+          <div class="view-title">
+            {{ activeView?.title }}
+          </div>
+        </el-header>
+        <el-scrollbar height="344px">
           <el-main>
             <div class="main">
               <component :is="activeView?.component" />
             </div>
           </el-main>
-        </el-container>
+        </el-scrollbar>
       </el-container>
     </template>
-    <template v-else>
-      <Login class="login-container" />
-    </template>
-  </div>
+    <Login v-else class="login-container" />
+  </el-container>
 </template>
 
 <script lang="ts" setup>
@@ -56,8 +54,10 @@
   import About from "./view/About.vue";
   import Sites from "./view/Sites.vue";
   import UserView from "./view/User.vue";
-  import { useStore } from "@/stores/main";
+  import { useStore } from "@/stores/store";
+  import { initUserInfo } from "./init";
 
+  const loading = initUserInfo();
   const store = useStore();
   const isCollapse = ref(true);
   const activeKey = ref("site");
@@ -93,8 +93,10 @@
 <style lang="scss">
   :root {
     width: 500px;
-    height: 400px;
     overflow: hidden;
+    --root-height: 400px;
+    --header-height: 56px;
+    height: var(--root-height);
   }
   body {
     padding: 0;
@@ -110,10 +112,6 @@
 </style>
 
 <style lang="scss" scoped>
-  .container {
-    height: 100%;
-    width: 100%;
-  }
   .login-container {
     padding: 50px;
   }
@@ -124,8 +122,9 @@
   .main {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    width: 100%;
+    min-height: calc(
+      var(--root-height) -var(--header-height) -var(--el-main-padding) - var(--el-main-padding)
+    );
   }
   .el-header {
     height: 56px;

@@ -1,4 +1,6 @@
 export const request = async (url: string, options: RequestInit) => {
+  // sleep 1s
+  // await new Promise((resolve) => setTimeout(resolve, 1000));
   const res = await fetch(url, options);
   const data = await res.json();
   if (data.code == 0) {

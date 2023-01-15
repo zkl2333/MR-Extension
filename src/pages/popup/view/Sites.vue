@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { getSitesConfig, getSitesSetting } from "@/api";
+  import { getSitesConfig, getSitesSetting } from "@/service/mbot";
   import { SiteConfig } from "@/types/types";
   import { ref } from "vue";
 

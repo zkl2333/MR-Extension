@@ -15,17 +15,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { useStore } from "@/stores/main";
+  import { useStore } from "@/stores/store";
   import { getImageColor } from "@/utils/color";
   import { ref, computed } from "vue";
 
   const store = useStore();
   const userName = computed(() => {
-    return store.userinfo?.nickname || store.userinfo?.username || "";
+    return store.userInfo?.nickname || store.userInfo?.username || "";
   });
   const avatarUrl = computed(() => {
-    if (store.userinfo?.avatar) {
-      return store.authData.baseUrl + store.userinfo?.avatar;
+    if (store.userInfo?.avatar) {
+      return store.authData.baseUrl + store.userInfo?.avatar;
     }
     return "";
   });
