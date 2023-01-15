@@ -3,6 +3,7 @@
     <el-checkbox-group v-model="checkboxGroup" size="small">
       <el-checkbox label="isLogin">在浏览器中</el-checkbox>
       <el-checkbox label="isExist">在 MR 中</el-checkbox>
+      <el-checkbox label="isNeedUpdate">MR 需要更新</el-checkbox>
     </el-checkbox-group>
   </div>
   <ul>
@@ -22,7 +23,7 @@
   import { getCookies } from "@/utils/utils";
   import { ref, watchEffect, computed } from "vue";
 
-  const checkboxGroup = ref(["isLogin"]);
+  const checkboxGroup = ref(["isNeedUpdate"]);
 
   const store = useStore();
   const siteCookieMap = ref<{
@@ -42,8 +43,18 @@
         };
       })
       .filter((site) => {
+        const getIsNeedUpdate = () => {
+          if (!site.siteCookie) return false;
+          if (site.siteSetting) {
+            return site.siteSetting.status !== 1;
+          } else {
+            return true;
+          }
+        };
+        const isNeedUpdate = getIsNeedUpdate();
         if (checkboxGroup.value.includes("isExist") && !site.siteSetting) return false;
         if (checkboxGroup.value.includes("isLogin") && !site.siteCookie) return false;
+        if (checkboxGroup.value.includes("isNeedUpdate") && !isNeedUpdate) return false;
         return true;
       });
   });

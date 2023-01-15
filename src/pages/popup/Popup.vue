@@ -34,7 +34,7 @@
             {{ activeView?.title }}
           </div>
         </el-header>
-        <el-scrollbar height="344px">
+        <el-scrollbar height="100%">
           <el-main v-loading="viewLoading">
             <div class="main">
               <component :is="activeView?.component" />
@@ -104,7 +104,7 @@
   :root {
     width: 500px;
     overflow: hidden;
-    --root-height: 400px;
+    --root-height: 600px;
     --header-height: 56px;
     height: var(--root-height);
   }
