@@ -1,4 +1,4 @@
-import { AuthData, Userinfo } from "@/types/types";
+import { AuthData, SiteConfig, Userinfo, SiteSetting } from "@/types/types";
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 
@@ -9,6 +9,8 @@ export const useStore = defineStore("main", () => {
     accessKey: "",
   });
   const userInfo = ref<Userinfo | null>(null);
+  const sitesSetting = ref<SiteSetting[] | null>(null);
+  const sitesConfig = ref<SiteConfig[] | null>(null);
 
   // 计算属性
   const isLogin = computed(() => {
@@ -26,5 +28,9 @@ export const useStore = defineStore("main", () => {
     isLogin,
     authData,
     logout,
+    sitesSetting,
+    sitesConfig,
   };
 });
+
+export type Store = ReturnType<typeof useStore>;

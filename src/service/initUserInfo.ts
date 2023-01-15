@@ -1,11 +1,10 @@
 import { getMyAccount } from "@/service/mbot";
-import { useStore } from "@/stores/store";
+import { useStore, Store } from "@/stores/store";
 import { ref } from "vue";
 
 // 获取本地存储的数据
-const setAuthData = async (store: ReturnType<typeof useStore>) => {
+const setAuthData = async (store: Store) => {
   const { baseUrl, accessKey } = await chrome.storage.sync.get(["baseUrl", "accessKey"]);
-  console.log(baseUrl, accessKey);
   if (!baseUrl || !accessKey) return;
   store.authData = { baseUrl, accessKey };
   const [res] = await getMyAccount();

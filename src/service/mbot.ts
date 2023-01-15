@@ -1,7 +1,8 @@
 import { useRequest } from "../utils/request";
 import { useStore } from "@/stores/store";
-import { Userinfo, SiteConfig } from "@/types/types";
+import { Userinfo, SiteConfig, SiteSetting } from "@/types/types";
 import { apis } from "@/api";
+import { defaultSiteSetting } from "@/constant/constant";
 
 const getAuthData = () => {
   const store = useStore();
@@ -15,14 +16,41 @@ export const getSitesConfig = async () => {
   });
 };
 
-export const saveSite = async (siteConfig: any) => {
+export const saveSite = async ({
+  siteConfig,
+  siteSetting,
+  siteCookie,
+}: {
+  siteConfig: SiteConfig;
+  siteCookie: string;
+  siteSetting: SiteSetting | null;
+}) => {
   const { baseUrl, accessKey } = getAuthData();
+  let newSiteSetting = {};
+  if (!siteSetting) {
+    newSiteSetting = Object.assign({}, defaultSiteSetting, {
+      site_name: siteConfig.id,
+      cookie: siteCookie,
+    });
+  } else {
+    newSiteSetting = {
+      site_name: siteConfig.id,
+      cookie: siteCookie,
+      proxies: siteSetting.proxies,
+      user_agent: siteSetting.user_agent,
+      web_search: siteSetting.web_search === 1,
+      smart_download: siteSetting.smart_download === 1,
+      traffic_management_status: siteSetting.traffic_management_status,
+      upload_kpi: siteSetting.upload_kpi,
+    };
+  }
+
   return await useRequest<any>(baseUrl + apis.saveSite + "?access_key=" + accessKey, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(siteConfig),
+    body: JSON.stringify(newSiteSetting),
   });
 };
 

@@ -35,7 +35,7 @@
           </div>
         </el-header>
         <el-scrollbar height="344px">
-          <el-main>
+          <el-main v-loading="viewLoading">
             <div class="main">
               <component :is="activeView?.component" />
             </div>
@@ -48,17 +48,27 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed } from "vue";
+  import { ref, computed, watchEffect } from "vue";
   import { User, Postcard, InfoFilled } from "@element-plus/icons-vue";
   import Login from "../../components/Login.vue";
   import About from "./view/About.vue";
   import Sites from "./view/Sites.vue";
   import UserView from "./view/User.vue";
   import { useStore } from "@/stores/store";
-  import { initUserInfo } from "./init";
+  import { initUserInfo } from "@/service/initUserInfo";
+  import { initSites } from "@/service/initSite";
 
   const loading = initUserInfo();
+  const viewLoading = ref(false);
   const store = useStore();
+  watchEffect(() => {
+    if (store.isLogin) {
+      viewLoading.value = true;
+      initSites().finally(() => {
+        viewLoading.value = false;
+      });
+    }
+  });
   const isCollapse = ref(true);
   const activeKey = ref("site");
 
@@ -123,7 +133,7 @@
     display: flex;
     flex-direction: column;
     min-height: calc(
-      var(--root-height) -var(--header-height) -var(--el-main-padding) - var(--el-main-padding)
+      var(--root-height) - var(--header-height) - var(--el-main-padding) - var(--el-main-padding)
     );
   }
   .el-header {

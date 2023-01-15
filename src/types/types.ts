@@ -35,3 +35,26 @@ export interface SiteConfig {
     };
   };
 }
+
+export interface SiteSetting {
+  alias: string;
+  cookie: string;
+  domain: string;
+  download_size: number;
+  gmt_create: string;
+  gmt_modified: string;
+  id: number;
+  is_vip: number;
+  proxies: string;
+  share_rate: number;
+  site_name: string;
+  smart_download: number;
+  status: number;
+  traffic_management_status: number;
+  uid: number;
+  upload_kpi: number;
+  upload_size: number;
+  user_agent: string;
+  username: string;
+  web_search: number;
+}
