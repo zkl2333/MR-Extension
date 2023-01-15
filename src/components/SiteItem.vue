@@ -9,7 +9,7 @@
           <el-tag v-else type="warning" size="small">未知</el-tag>
         </template>
         <template v-else>
-          <el-tag size="small" type="info">未登录</el-tag>
+          <el-tag size="small" type="info">可提交</el-tag>
         </template>
       </span>
     </div>
