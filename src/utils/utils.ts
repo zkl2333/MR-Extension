@@ -2,6 +2,28 @@
 // import { Ref } from "vue";
 // import { getSitesConfig, saveSite, getSitesSetting } from "../service/mbot";
 
+// 将 mb 转为可读
+export const coverSize = (size_mb: string | number): string => {
+  if (size_mb === "-" || size_mb === "无限") {
+    return size_mb;
+  }
+  const _size_mb = Number(size_mb);
+  if (_size_mb < 0) {
+    return "-" + coverSize(-_size_mb);
+  }
+  if (_size_mb <= 1024) {
+    return _size_mb.toFixed(2) + "MB";
+  } else if (_size_mb <= 1024 * 1024) {
+    return (_size_mb / 1024).toFixed(2) + "GB";
+  } else if (_size_mb <= 1024 * 1024 * 1024) {
+    return (_size_mb / 1024 / 1024).toFixed(2) + "TB";
+  } else if (_size_mb <= 1024 * 1024 * 1024 * 1024) {
+    return (_size_mb / 1024 / 1024 / 1024).toFixed(2) + "PB";
+  } else {
+    return `${_size_mb}`
+  }
+};
+
 // 用于获取站点的cookie
 export const getCookies = async (url: any) => {
   const cookie = await chrome.cookies.getAll({ url: url });

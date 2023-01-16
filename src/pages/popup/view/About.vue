@@ -29,6 +29,7 @@
     justify-content: center;
     height: 100%;
     padding: 0 30px;
+    flex: 1;
     .title {
       font-size: 30px;
       font-weight: 500;

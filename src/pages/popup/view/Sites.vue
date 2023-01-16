@@ -20,22 +20,18 @@
 <script lang="ts" setup>
   import SiteItem from "@/components/SiteItem.vue";
   import { useStore } from "@/stores/store";
-  import { getCookies } from "@/utils/utils";
-  import { ref, watchEffect, computed } from "vue";
+  import { ref, computed } from "vue";
 
   const checkboxGroup = ref(["isNeedUpdate"]);
 
   const store = useStore();
-  const siteCookieMap = ref<{
-    [key: string]: string;
-  }>({});
 
   const filterSites = computed(() => {
     if (!store.sitesConfig) return [];
     return store.sitesConfig
       .map((siteConfig) => {
         const siteSetting = store.sitesSetting?.find((s) => s.site_name === siteConfig.id) || null;
-        const siteCookie = siteCookieMap.value[siteConfig.id];
+        const siteCookie = store.siteCookieMap[siteConfig.id];
         return {
           siteConfig,
           siteSetting,
@@ -57,16 +53,6 @@
         if (checkboxGroup.value.includes("isNeedUpdate") && !isNeedUpdate) return false;
         return true;
       });
-  });
-
-  watchEffect(() => {
-    if (store.sitesConfig && store.sitesConfig.length > 0) {
-      store.sitesConfig.forEach((siteConfig) => {
-        getCookies(siteConfig.domain).then((cookies) => {
-          siteCookieMap.value[siteConfig.id] = cookies;
-        });
-      });
-    }
   });
 </script>
 

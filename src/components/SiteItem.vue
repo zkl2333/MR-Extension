@@ -32,6 +32,7 @@
 </template>
 
 <script lang="ts" setup>
+  import { initSites } from "@/service/initSite";
   import { saveSite } from "@/service/mbot";
   import type { SiteConfig, SiteSetting } from "@/types/types";
   import { openUrl } from "@/utils/utils";
@@ -71,6 +72,7 @@
         title: siteConfig.name + "保存成功",
         message: "站点" + siteConfig.name + "保存成功",
       });
+      initSites();
     }
     loading.value = false;
   };

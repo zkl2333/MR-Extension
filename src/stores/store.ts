@@ -11,6 +11,9 @@ export const useStore = defineStore("main", () => {
   const userInfo = ref<Userinfo | null>(null);
   const sitesSetting = ref<SiteSetting[] | null>(null);
   const sitesConfig = ref<SiteConfig[] | null>(null);
+  const siteCookieMap = ref<{
+    [key: string]: string;
+  }>({});
 
   // 计算属性
   const isLogin = computed(() => {
@@ -30,6 +33,7 @@ export const useStore = defineStore("main", () => {
     logout,
     sitesSetting,
     sitesConfig,
+    siteCookieMap,
   };
 });
 
