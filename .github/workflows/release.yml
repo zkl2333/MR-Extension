@@ -1,0 +1,67 @@
+name: Node.js Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      # check it to your workflow can access it
+      # from: https://github.com/actions/checkout
+      - name: 1. 检查master分支
+        uses: actions/checkout@master
+
+      # from: https://github.com/actions/setup-node
+      - name: 2. 设置Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: 3. 缓存
+        uses: actions/cache@v2
+        id: cache-dependencies
+        with:
+          path: node_modules
+          key: ${{runner.OS}}-${{hashFiles('**/yarn.lock')}}
+
+      - name: 4. 安装插件
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          export TZ='Asia/Shanghai'
+          yarn install
+
+      - name: 5. 生成文件
+        run: |
+          export TZ='Asia/Shanghai'
+          yarn build
+
+      - name: 6. 读取当前版本号
+        id: version
+        uses: ashley-taylor/read-json-property-action@v1.0
+        with:
+          path: ./package.json
+          property: version
+
+      - name: 7. 读取描述文件
+        id: description
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./description.txt
+
+      - name: 8. 创建GitHub Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{steps.version.outputs.value}}
+          release_name: v${{steps.version.outputs.value}}
+          body: ${{steps.description.outputs.content}}
+          draft: false
+          prerelease: false
