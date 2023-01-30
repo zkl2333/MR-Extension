@@ -1,36 +1,36 @@
-name: Node.js Package
+name: 自动发布
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
-  publish-npm:
+  create_release:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
     steps:
-      # check it to your workflow can access it
-      # from: https://github.com/actions/checkout
       - name: 1. 检查master分支
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
-      # from: https://github.com/actions/setup-node
       - name: 2. 设置Node.js
         uses: actions/setup-node@master
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: 3. 缓存
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: cache-dependencies
         with:
           path: node_modules
           key: ${{runner.OS}}-${{hashFiles('**/yarn.lock')}}
 
-      - name: 4. 安装插件
+      - name: 4. 安装依赖
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: |
           export TZ='Asia/Shanghai'
@@ -43,25 +43,24 @@ jobs:
 
       - name: 6. 读取当前版本号
         id: version
-        uses: ashley-taylor/read-json-property-action@v1.0
-        with:
-          path: ./package.json
-          property: version
+        run: |
+          export TZ='Asia/Shanghai'
+          echo "value=$(node ./scripts/ci-version.cjs)" >> $GITHUB_OUTPUT
 
-      - name: 7. 读取描述文件
-        id: description
-        uses: juliangruber/read-file-action@v1
+      - name: 7. 创建压缩包
+        id: build_zip
+        uses: cardinalby/webext-buildtools-pack-extension-dir-action@v1
         with:
-          path: ./description.txt
+          extensionDir: "dist"
+          zipFilePath: "MR-Extension v${{steps.version.outputs.value}}.zip"
 
       - name: 8. 创建GitHub Release
         id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{steps.version.outputs.value}}
-          release_name: v${{steps.version.outputs.value}}
-          body: ${{steps.description.outputs.content}}
+          release_name: MR-Extension v${{steps.version.outputs.value}}
+          body: TODO New Release.
           draft: false
           prerelease: false
+          files: MR-Extension v${{steps.version.outputs.value}}.zip
