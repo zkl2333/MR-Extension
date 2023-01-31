@@ -59,8 +59,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{steps.version.outputs.value}}
-          release_name: MR-Extension v${{steps.version.outputs.value}}
-          body: TODO New Release.
+          body: MR Extension 是一个 Chrome 插件，需要与 Movie Bot 配合使用。 用于将当前浏览器登陆过的PT站点提交到 Movie Bot 中。
           draft: false
           prerelease: false
           files: MR-Extension v${{steps.version.outputs.value}}.zip
