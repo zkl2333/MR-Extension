@@ -1,9 +1,10 @@
 name: 自动发布
 
 on:
+  workflow_dispatch:
   push:
-    branches:
-      - main
+    tags:
+      - "v*.*.*"
 
 permissions:
   contents: write
@@ -15,8 +16,10 @@ jobs:
       matrix:
         node-version: [16.x]
     steps:
-      - name: 1. 检查master分支
+      - name: 1. 检出分支
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: 2. 设置Node.js
         uses: actions/setup-node@master
@@ -36,35 +39,25 @@ jobs:
           export TZ='Asia/Shanghai'
           yarn install
 
-      - name: 5. 生成文件
+      - name: 5. 打包构建
         run: |
           export TZ='Asia/Shanghai'
           yarn build
 
-      - name: 6. 读取当前版本号
-        id: version
-        run: |
-          export TZ='Asia/Shanghai'
-          echo "value=$(node ./scripts/ci-version.cjs)" >> $GITHUB_OUTPUT
-
-      - name: 7. 创建压缩包
+      - name: 6. 创建压缩包
         id: build_zip
         uses: cardinalby/webext-buildtools-pack-extension-dir-action@v1
         with:
           extensionDir: "dist"
-          zipFilePath: "MR-Extension v${{steps.version.outputs.value}}.zip"
+          zipFilePath: "MR-Extension ${{ github.ref_name }}.zip"
 
-      - name: 8. 创建GitHub Release
+      - name: 7. 创建 Release
+        run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: 8. 创建 GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{steps.version.outputs.value}}
-          body: MR Extension 是一个 Chrome 插件，需要与 Movie Bot 配合使用。 用于将当前浏览器登陆过的PT站点提交到 Movie Bot 中。
-          draft: false
-          prerelease: false
-          files: MR-Extension v${{steps.version.outputs.value}}.zip
-
-      - name: 9. 更新 Release Note
-        run: npx changelogithub # or changelogithub@0.12 if ensure the stable result
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          files: MR-Extension ${{ github.ref_name }}.zip
