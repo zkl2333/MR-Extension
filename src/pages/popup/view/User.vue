@@ -24,8 +24,8 @@
         {{ errorNum }} 个站点异常。
       </div>
       <div>
-        您在当前浏览器中有 {{ cookieNum }} 个站点的 Cookie，其中
-        {{ cookieNum - settingNum }} 个站点的 Cookie 可以新增到 MR 保存。
+        您在当前浏览器中有 {{ cookieNum }} 个站点的 Cookie，其中 {{ needPushNum }} 个站点的 Cookie
+        可以新增到 MR 保存。
       </div>
     </div>
     <div class="logout">
@@ -63,6 +63,15 @@
   });
   const errorNum = computed(() => {
     return store.sitesSetting?.filter((s) => s.status !== 1).length || 0;
+  });
+  const needPushNum = computed(() => {
+    return (
+      store.sitesConfig?.filter((c) => {
+        const config = store.sitesSetting?.find((s) => c.id === s.site_name);
+        const cookie = store.siteCookieMap[c.id];
+        return !config && cookie;
+      }).length || 0
+    );
   });
 
   const avatarColor = ref("#fff");
