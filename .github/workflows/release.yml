@@ -63,3 +63,8 @@ jobs:
           draft: false
           prerelease: false
           files: MR-Extension v${{steps.version.outputs.value}}.zip
+
+      - name: 9. 更新 Release Note
+        run: npx changelogithub # or changelogithub@0.12 if ensure the stable result
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
