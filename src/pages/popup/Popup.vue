@@ -54,6 +54,7 @@
   import About from "./view/About.vue";
   import Sites from "./view/Sites.vue";
   import UserView from "./view/User.vue";
+  import PluginCommand from "./view/PluginCommand.vue";
   import { useStore } from "@/stores/store";
   import { initUserInfo } from "@/service/initUserInfo";
   import { initSites } from "@/service/initSite";
@@ -94,6 +95,12 @@
       icon: InfoFilled,
       key: "about",
       component: About,
+    },
+    {
+      title: "快捷指令",
+      icon: InfoFilled,
+      key: "command",
+      component: PluginCommand,
     },
   ];
 

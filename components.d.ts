@@ -27,6 +27,7 @@ declare module '@vue/runtime-core' {
     ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElTag: typeof import('element-plus/es')['ElTag']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    Icon: typeof import('./src/components/Icon.vue')['default']
     Login: typeof import('./src/components/Login.vue')['default']
     SiteItem: typeof import('./src/components/SiteItem.vue')['default']
   }
