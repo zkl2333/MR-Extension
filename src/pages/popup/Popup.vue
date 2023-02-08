@@ -49,7 +49,7 @@
 
 <script lang="ts" setup>
   import { ref, computed, watchEffect } from "vue";
-  import { User, Postcard, InfoFilled } from "@element-plus/icons-vue";
+  import { User, Postcard, InfoFilled, Operation } from "@element-plus/icons-vue";
   import Login from "../../components/Login.vue";
   import About from "./view/About.vue";
   import Sites from "./view/Sites.vue";
@@ -98,7 +98,7 @@
     },
     {
       title: "快捷指令",
-      icon: InfoFilled,
+      icon: Operation,
       key: "command",
       component: PluginCommand,
     },
