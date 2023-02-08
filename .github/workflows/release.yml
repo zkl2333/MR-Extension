@@ -24,12 +24,12 @@ jobs:
           package-name: release-please-action
           extra-files: package.json
 
-       - name: 检出分支
+      - name: 检出分支
         uses: actions/checkout@v3
         if: ${{ steps.release.outputs.release_created }}
         with:
           fetch-depth: 0
-        
+
       # - name: 2. 设置Node.js
       #   uses: actions/setup-node@master
       #   with:
