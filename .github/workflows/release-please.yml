@@ -1,0 +1,22 @@
+name: release-please
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+
+permissions: write-all
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Release-PR
+        uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: node
+          package-name: release-please-action
+          extra-files: package.json
