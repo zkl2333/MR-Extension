@@ -17,17 +17,19 @@ jobs:
       matrix:
         node-version: [16.x]
     steps:
-      - name: 检出分支
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
       - name: Release-PR
         uses: google-github-actions/release-please-action@v3
         with:
           release-type: node
           package-name: release-please-action
+          extra-files: package.json
 
+       - name: 检出分支
+        uses: actions/checkout@v3
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          fetch-depth: 0
+        
       # - name: 2. 设置Node.js
       #   uses: actions/setup-node@master
       #   with:
