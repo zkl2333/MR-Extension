@@ -3,6 +3,7 @@ name: 自动发布
 on:
   workflow_dispatch:
   push:
+    branches: ["main"]
     tags:
       - "v*.*.*"
 
@@ -16,48 +17,57 @@ jobs:
       matrix:
         node-version: [16.x]
     steps:
-      - name: 1. 检出分支
+      - name: 检出分支
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: 2. 设置Node.js
-        uses: actions/setup-node@master
+      - name: Release-PR
+        uses: google-github-actions/release-please-action@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          release-type: node
+          package-name: release-please-action
 
-      - name: 3. 缓存
-        uses: actions/cache@v3
-        id: cache-dependencies
-        with:
-          path: node_modules
-          key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}
+      # - name: 2. 设置Node.js
+      #   uses: actions/setup-node@master
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
 
-      - name: 4. 安装依赖
-        if: steps.cache-dependencies.outputs.cache-hit != 'true'
-        run: |
-          export TZ='Asia/Shanghai'
-          npm ci
+      # - name: 3. 缓存
+      #   uses: actions/cache@v3
+      #   id: cache-dependencies
+      #   with:
+      #     path: node_modules
+      #     key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}
 
-      - name: 5. 打包构建
-        run: |
-          export TZ='Asia/Shanghai'
-          npm run build
+      # - name: 4. 安装依赖
+      #   if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      #   run: |
+      #     export TZ='Asia/Shanghai'
+      #     npm ci
 
-      - name: 6. 创建压缩包
-        id: build_zip
-        uses: cardinalby/webext-buildtools-pack-extension-dir-action@v1
-        with:
-          extensionDir: "dist"
-          zipFilePath: "MR-Extension ${{ github.ref_name }}.zip"
+      # - name: 5. 打包构建
+      #   run: |
+      #     export TZ='Asia/Shanghai'
+      #     npm run build
 
-      - name: 7. 创建 Release
-        run: npx changelogithub
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: 6. 创建压缩包
+      #   id: build_zip
+      #   uses: cardinalby/webext-buildtools-pack-extension-dir-action@v1
+      #   if: "!startsWith(github.ref, 'refs/tags/')"
+      #   with:
+      #     extensionDir: "dist"
+      #     zipFilePath: "MR-Extension ${{ github.ref_name }}.zip"
 
-      - name: 8. 创建 GitHub Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: MR-Extension ${{ github.ref_name }}.zip
+      # - name: 7. 创建 Release
+      #   run: npx changelogithub
+      #   if: "!startsWith(github.ref, 'refs/tags/')"
+      #   env:
+      #     GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      # - name: 8. 创建 GitHub Release
+      #   id: create_release
+      #   uses: softprops/action-gh-release@v1
+      #   if: "!startsWith(github.ref, 'refs/tags/')"
+      #   with:
+      #     files: MR-Extension ${{ github.ref_name }}.zip
