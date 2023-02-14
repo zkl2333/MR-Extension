@@ -48,7 +48,7 @@ export interface SiteSetting {
   proxies: string;
   share_rate: number;
   site_name: string;
-  smart_download: number;
+  smart_download: number | boolean;
   status: number;
   traffic_management_status: number;
   uid: number;
@@ -56,5 +56,5 @@ export interface SiteSetting {
   upload_size: number;
   user_agent: string;
   username: string;
-  web_search: number;
+  web_search: number | boolean;
 }

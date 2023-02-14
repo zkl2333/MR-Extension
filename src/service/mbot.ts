@@ -19,31 +19,27 @@ export const getSitesConfig = async () => {
 export const saveSite = async ({
   siteConfig,
   siteSetting,
-  siteCookie,
 }: {
   siteConfig: SiteConfig;
-  siteCookie: string;
-  siteSetting: SiteSetting | null;
+  siteSetting: SiteSetting;
 }) => {
   const { baseUrl, accessKey } = getAuthData();
-  let newSiteSetting = {};
-  if (!siteSetting) {
-    newSiteSetting = Object.assign({}, defaultSiteSetting, {
-      site_name: siteConfig.id,
-      cookie: siteCookie,
-    });
-  } else {
-    newSiteSetting = {
-      site_name: siteConfig.id,
-      cookie: siteCookie,
-      proxies: siteSetting.proxies,
-      user_agent: siteSetting.user_agent,
-      web_search: siteSetting.web_search === 1,
-      smart_download: siteSetting.smart_download === 1,
-      traffic_management_status: siteSetting.traffic_management_status,
-      upload_kpi: siteSetting.upload_kpi,
-    };
-  }
+  const newSiteSetting = {
+    site_name: siteConfig.id,
+    cookie: siteSetting.cookie,
+    proxies: siteSetting.proxies,
+    user_agent: siteSetting.user_agent,
+    web_search:
+      typeof siteSetting.web_search === "boolean"
+        ? siteSetting.web_search
+        : siteSetting.web_search === 1,
+    smart_download:
+      typeof siteSetting.smart_download === "boolean"
+        ? siteSetting.smart_download
+        : siteSetting.smart_download === 1,
+    traffic_management_status: siteSetting.traffic_management_status,
+    upload_kpi: siteSetting.upload_kpi,
+  };
 
   return await useRequest<any>(baseUrl + apis.saveSite + "?access_key=" + accessKey, {
     method: "POST",
