@@ -15,6 +15,10 @@ export default defineManifest(async (env) => {
       default_title: "点击打开",
       default_popup: "popup.html",
     },
+    background: {
+      service_worker: "src/background.ts",
+      type: "module",
+    },
     host_permissions: ["*://*/*"],
     permissions: ["cookies", "storage"],
     icons: {
