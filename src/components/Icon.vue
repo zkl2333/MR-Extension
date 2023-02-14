@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { defineProps, ref } from "vue";
+  import { ref } from "vue";
   const { iconName } = defineProps<{
     iconName: string;
   }>();

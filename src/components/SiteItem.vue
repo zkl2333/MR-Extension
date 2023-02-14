@@ -22,7 +22,7 @@
         type="primary"
         size="small"
         :loading="loading"
-        :plain="siteSetting"
+        :plain="!!siteSetting"
         @click.stop="submitSite"
       >
         {{ siteSetting ? "更新" : "提交" }}

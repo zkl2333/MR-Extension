@@ -3,17 +3,23 @@
     <el-checkbox-group v-model="checkboxGroup" size="small">
       <el-checkbox label="isLogin">在浏览器中</el-checkbox>
       <el-checkbox label="isExist">在 MR 中</el-checkbox>
-      <el-checkbox label="isNeedUpdate">MR 需要更新</el-checkbox>
+      <el-checkbox label="isError">异常站点</el-checkbox>
     </el-checkbox-group>
   </div>
   <ul>
-    <li v-for="site in filterSites" :key="site.siteConfig.id">
+    <li v-if="filterSites.length > 0" v-for="site in filterSites" :key="site.siteConfig.id">
       <SiteItem
         :siteConfig="site.siteConfig"
         :siteSetting="site.siteSetting"
         :siteCookie="site.siteCookie"
       />
     </li>
+    <el-empty
+      v-else
+      :description="
+        checkboxGroup.includes('isError') ? '太棒了！没有异常站点！' : '没有符合条件的站点'
+      "
+    />
   </ul>
 </template>
 
@@ -22,7 +28,7 @@
   import { useStore } from "@/stores/store";
   import { ref, computed } from "vue";
 
-  const checkboxGroup = ref(["isNeedUpdate"]);
+  const checkboxGroup = ref(["isError"]);
 
   const store = useStore();
 
@@ -39,18 +45,19 @@
         };
       })
       .filter((site) => {
-        const getIsNeedUpdate = () => {
-          if (!site.siteCookie) return false;
+        const getIsError = () => {
+          // if (!site.siteCookie) return false;
           if (site.siteSetting) {
             return site.siteSetting.status !== 1;
           } else {
-            return true;
+            // return true;
           }
+          return false;
         };
-        const isNeedUpdate = getIsNeedUpdate();
+        const isNeedUpdate = getIsError();
         if (checkboxGroup.value.includes("isExist") && !site.siteSetting) return false;
         if (checkboxGroup.value.includes("isLogin") && !site.siteCookie) return false;
-        if (checkboxGroup.value.includes("isNeedUpdate") && !isNeedUpdate) return false;
+        if (checkboxGroup.value.includes("isError") && !isNeedUpdate) return false;
         return true;
       });
   });
