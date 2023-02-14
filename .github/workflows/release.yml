@@ -31,18 +31,18 @@ jobs:
         id: cache-dependencies
         with:
           path: node_modules
-          key: ${{runner.OS}}-${{hashFiles('**/yarn.lock')}}
+          key: ${{runner.OS}}-${{hashFiles('**/package-lock.json')}}
 
       - name: 4. 安装依赖
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: |
           export TZ='Asia/Shanghai'
-          yarn install
+          npm ci
 
       - name: 5. 打包构建
         run: |
           export TZ='Asia/Shanghai'
-          yarn build
+          npm run build
 
       - name: 6. 创建压缩包
         id: build_zip
