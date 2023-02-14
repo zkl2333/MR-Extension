@@ -8,17 +8,21 @@
       </p>
     </div>
     <div class="footer">
-      如果你有任何问题，欢迎在
-      <el-button type="text" @click="openUrl('https://github.com/zkl2333/MR-Extension/issues')">
-        GitHub
-      </el-button>
-      上提出。
+      <img :src="ddWechat" alt="" />
+      <div>
+        如果这个插件对你有帮助，可以请我喝杯奶茶。 使用中有任何问题，欢迎在
+        <el-button type="text" @click="openUrl('https://github.com/zkl2333/MR-Extension/issues')">
+          GitHub
+        </el-button>
+        上提出。
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
   import { openUrl } from "@/utils/utils";
+  import ddWechat from "@/assets/dd_wechat.jpg";
 </script>
 
 <style lang="scss" scoped>
@@ -39,6 +43,7 @@
       margin-top: 30px;
       margin-bottom: 30px;
     }
+
     .content {
       text-align: center;
       line-height: 1.5;
@@ -48,7 +53,17 @@
       }
     }
     .footer {
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+      img {
+        width: 80%;
+        height: 80%;
+        margin-bottom: 24px;
+      }
     }
   }
 </style>
