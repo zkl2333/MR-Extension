@@ -59,14 +59,7 @@ export const getSitesSetting = async () => {
 
 export const getMyAccount = async () => {
   const { baseUrl, accessKey } = getAuthData();
-  return await useRequest<Userinfo>(baseUrl + apis.myAccount + "?access_key=" + accessKey, {
-    method: "GET",
-  });
-};
-
-export const getPluginCommandList = async () => {
-  const { baseUrl, accessKey } = getAuthData();
-  return await useRequest<any>(baseUrl + apis.getPluginCommandList + "?access_key=" + accessKey, {
+  return await useRequest<Userinfo>(baseUrl + apis.my_account + "?access_key=" + accessKey, {
     method: "GET",
   });
 };
