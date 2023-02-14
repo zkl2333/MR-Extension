@@ -51,7 +51,12 @@ jobs:
           extensionDir: "dist"
           zipFilePath: "MR-Extension ${{ github.ref_name }}.zip"
 
-      - name: 8. 发布 GitHub Release
+      - name: 7. 创建 Release
+        run: npx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: 8. 创建 GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
