@@ -6,7 +6,9 @@ export const useStore = defineStore("main", () => {
   // 状态
   const authData = ref<AuthData>({
     baseUrl: "",
+    loginType: "accessKey",
     accessKey: "",
+    accessToken: "",
   });
   const userInfo = ref<Userinfo | null>(null);
   const sitesSetting = ref<SiteSetting[] | null>(null);
@@ -23,7 +25,7 @@ export const useStore = defineStore("main", () => {
   // 清空数据
   const logout = () => {
     userInfo.value = null;
-    chrome.storage.sync.remove(["baseUrl", "accessKey"]);
+    chrome.storage.sync.remove(["baseUrl", "accessKey", "accessToken", "loginType"]);
   };
 
   return {

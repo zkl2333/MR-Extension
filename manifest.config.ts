@@ -20,7 +20,7 @@ export default defineManifest(async (env) => {
       type: "module",
     },
     host_permissions: ["*://*/*"],
-    permissions: ["cookies", "storage"],
+    permissions: ["cookies", "storage", "scripting"],
     icons: {
       "16": "icon16.png",
       "48": "icon48.png",

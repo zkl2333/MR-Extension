@@ -2,16 +2,25 @@ import { useRequest } from "../utils/request";
 import { useStore } from "@/stores/store";
 import { Userinfo, SiteConfig, SiteSetting } from "@/types/types";
 import { apis } from "@/api";
-import { defaultSiteSetting } from "@/constant/constant";
 
 const getAuthData = () => {
   const store = useStore();
   return store.authData;
 };
 
+// 生成 fetch 请求的参数，自动处理query参数和body
+const useRequestWithAuth = <T>(api: string, options: RequestInit) => {
+  const { baseUrl, accessKey, accessToken, loginType } = getAuthData();
+  const url =
+    baseUrl + api + (loginType === "accessKey" ? "?=" + new URLSearchParams({ accessKey }) : "");
+  if (loginType === "accessToken") {
+    options.headers = { Authorization: "Bearer " + accessToken, ...options.headers };
+  }
+  return useRequest<T>(url, options);
+};
+
 export const getSitesConfig = async () => {
-  const { baseUrl, accessKey } = getAuthData();
-  return await useRequest<SiteConfig[]>(baseUrl + apis.sites + "?access_key=" + accessKey, {
+  return await useRequestWithAuth<SiteConfig[]>(apis.sites, {
     method: "GET",
   });
 };
@@ -23,7 +32,6 @@ export const saveSite = async ({
   siteConfig: SiteConfig;
   siteSetting: SiteSetting;
 }) => {
-  const { baseUrl, accessKey } = getAuthData();
   const newSiteSetting = {
     site_name: siteConfig.id,
     cookie: siteSetting.cookie,
@@ -40,8 +48,7 @@ export const saveSite = async ({
     traffic_management_status: siteSetting.traffic_management_status,
     upload_kpi: siteSetting.upload_kpi,
   };
-
-  return await useRequest<any>(baseUrl + apis.saveSite + "?access_key=" + accessKey, {
+  return await useRequestWithAuth(apis.saveSite, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -51,15 +58,13 @@ export const saveSite = async ({
 };
 
 export const getSitesSetting = async () => {
-  const { baseUrl, accessKey } = getAuthData();
-  return await useRequest<any>(baseUrl + apis.getSites + "?access_key=" + accessKey, {
+  return await useRequestWithAuth<any>(apis.getSites, {
     method: "GET",
   });
 };
 
 export const getMyAccount = async () => {
-  const { baseUrl, accessKey } = getAuthData();
-  return await useRequest<Userinfo>(baseUrl + apis.my_account + "?access_key=" + accessKey, {
+  return await useRequestWithAuth<Userinfo>(apis.my_account, {
     method: "GET",
   });
 };

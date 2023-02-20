@@ -1,6 +1,8 @@
 export interface AuthData {
   baseUrl: string;
+  loginType: string;
   accessKey: string;
+  accessToken: string;
 }
 
 export interface Userinfo {
