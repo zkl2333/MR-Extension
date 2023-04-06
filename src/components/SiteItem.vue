@@ -40,11 +40,19 @@
         </div>
       </template>
 
-      <el-form :model="form" label-width="80px" size="small">
+      <el-form :model="form" label-width="85px" size="small">
         <el-form-item label="Cookie">
           <el-input v-model="form.cookie" type="textarea" :rows="form.cookie ? 2 : 1" />
         </el-form-item>
-        <el-form-item label="User-Agent">
+        <el-form-item>
+          <template #label>
+            <div class="label">
+              User-Agent
+              <el-icon :size="14">
+                <ChromeFilled @click="autoFillUA" />
+              </el-icon>
+            </div>
+          </template>
           <el-input v-model="form.user_agent" type="textarea" :rows="form.user_agent ? 2 : 1" />
         </el-form-item>
         <el-form-item label="代理">
@@ -81,6 +89,7 @@
   import "element-plus/theme-chalk/src/notification.scss";
   import { ref, reactive } from "vue";
   import { coverSize } from "@/utils/utils";
+  import { ChromeFilled } from "@element-plus/icons-vue";
 
   const { siteSetting, siteConfig, siteCookie } = defineProps<{
     siteConfig: SiteConfig;
@@ -136,6 +145,10 @@
     }
     loading.value = false;
   };
+
+  const autoFillUA = () => {
+    form.user_agent = navigator.userAgent;
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -152,6 +165,17 @@
 
     :deep(.el-drawer__header) {
       margin-bottom: 12px;
+    }
+
+    .label {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+
+      .el-icon {
+        margin-left: 4px;
+        cursor: pointer;
+      }
     }
     .site-info {
       text-align: center;
